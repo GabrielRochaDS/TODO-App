@@ -1,4 +1,6 @@
 package com.example.todo.ui.screens
+
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import com.example.todo.ui.model.Todo
 import androidx.compose.runtime.Composable
@@ -26,84 +28,102 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.auxilyarisolution.ui.ConfirmatorDialog
 import com.example.compose.TODOTheme
 
 //================================ RESPONSAVEL PELO COMPOSABLE DO TOODOO================================
 
 @Composable
 fun TooDoCard(modifier: Modifier = Modifier, todo: Todo, tooDoViewModel: TooDoViewModel) {
-        //================Variaveis que guardam o maximo de linhas e se a tela ta espaandida================
-        var expanded by remember { mutableStateOf(false) }
-        val maxLinesTitle = if (!expanded) 1 else 10
-        val isEditin by tooDoViewModel.isEditin.collectAsState()
+    //================Variaveis que guardam o maximo de linhas e se a tela ta espaandida================
+    var expanded by remember { mutableStateOf(false) }
+    val maxLinesTitle = if (!expanded) 1 else 10
+    val isEditin by tooDoViewModel.isEditin.collectAsState()
+    var showDeleteUi by remember { mutableStateOf(false) }
 
 
-        Card(modifier = modifier.fillMaxWidth()) {
+    Card(modifier = modifier
+        .fillMaxWidth()
+        .clickable { expanded = !expanded }) {
         Column(
-        modifier = modifier
-        .fillMaxWidth()
-        .padding(10.dp))
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(10.dp)
+        )
         {
-        Text(
-        text = todo.title,
-        fontSize = 20.sp,
-        maxLines = maxLinesTitle,
-        style = MaterialTheme.typography.bodyLarge,
-        modifier = Modifier
-        .align(Alignment.CenterHorizontally)
-        .padding(bottom = 15.dp),
-        overflow = TextOverflow.Ellipsis,
-        )
-        if (expanded){
-        Text(
-        text =if(todo.description!=null){
-        todo.description} else "Has no Description",
-        style = MaterialTheme.typography.bodyLarge,
+            Text(
+                text = todo.title,
+                fontSize = 20.sp,
+                maxLines = maxLinesTitle,
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(bottom = 15.dp),
+                overflow = TextOverflow.Ellipsis,
+            )
+            if (expanded) {
+                Text(
+                    text = if (todo.description != null) {
+                        todo.description
+                    } else "Has no Description",
+                    style = MaterialTheme.typography.bodyLarge,
 
-        )
+                    )
+            }
+            if (!isEditin) {
+                IconButton(
+                    onClick = { },
+                    modifier = modifier
+                        .fillMaxWidth()
+                        .height(25.dp)
+                ) {
+                    Icon(
+                        imageVector = if (expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.secondary,
+                    )
+                }
+            }
         }
+        if (isEditin) {
+            IconButton(
+                onClick = {
+                    showDeleteUi = true
+                },
+                modifier = modifier
+                    .fillMaxWidth()
+                    .height(25.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.Delete,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.secondary,
+                )
+            }
         }
-        if(!isEditin) {
-        IconButton(
-        onClick = { expanded = !expanded },
-        modifier = modifier
-        .fillMaxWidth()
-        .height(25.dp)
-        ) {
-        Icon(
-        imageVector = if (expanded) Icons.Filled.ExpandLess else Icons.Filled.ExpandMore,
-        contentDescription = null,
-        tint = MaterialTheme.colorScheme.secondary,
-        )
+        if (showDeleteUi) {
+            ConfirmatorDialog(
+                onDismissRequest = { showDeleteUi = false },
+                onConfirmation = {
+                    showDeleteUi = false
+                    tooDoViewModel.deleteTooDo(todo)
+                    tooDoViewModel.isEditin
+                },
+                icon = { },
+                principalText = { Text(text = "Atenção!") },
+                secondaryText = { Text(text = "Tem certeza que deseja deletar o card? \n Essa ação não poderá ser desfeita!!") })
         }
-        }
-        if(isEditin){
-        IconButton(
-        onClick = {
-        tooDoViewModel.isOnEditin()
-        tooDoViewModel.deleteTooDo(todo) },
-        modifier = modifier
-        .fillMaxWidth()
-        .height(25.dp)
-        ) {
-        Icon(
-        imageVector = Icons.Filled.Delete,
-        contentDescription = null,
-        tint = MaterialTheme.colorScheme.secondary,
-        )
-        }
-        }
-        }
-        }
+    }
+}
 
 
 @Preview(
-        showBackground = true
+    showBackground = true
 )
 @Composable
-fun HomeScreemPreview(){
-        val tooDoViewModel: TooDoViewModel = viewModel()
-        TODOTheme {
-        TooDoCard(todo = Todo("asdasads","asddasdas"), tooDoViewModel = tooDoViewModel  )
-        }
-        }
+fun HomeScreemPreview() {
+    val tooDoViewModel: TooDoViewModel = viewModel()
+    TODOTheme {
+        TooDoCard(todo = Todo("asdasads", "asddasdas"), tooDoViewModel = tooDoViewModel)
+    }
+}

@@ -20,57 +20,66 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.compose.TODOTheme
 
 @Composable
-fun NewTooDo(tooDoViewModel: TooDoViewModel){
-        var title by remember { mutableStateOf<String?>(null) }
-        var description by remember { mutableStateOf<String?>(null) }
+fun NewTooDo(tooDoViewModel: TooDoViewModel) {
+    var title by remember { mutableStateOf<String?>(null) }
+    var description by remember { mutableStateOf<String?>(null) }
 
-        AlertDialog(
+    AlertDialog(
         onDismissRequest = { tooDoViewModel.Change() },
         title = { Text(text = "Adicionar nova Atividade") },
         text = {
-        Column {
-        OutlinedTextField(
-        value = if (title!= null){title!!} else{""},
-        onValueChange = {title = it},
-        label = { Text("Título") },
-        modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        OutlinedTextField(
-        value = if (description!= null){description!!} else{""},
-        onValueChange = { description = it },
-        label = { Text("Descrição") },
-        modifier = Modifier.fillMaxWidth()
-        )
-        }
+            Column {
+                OutlinedTextField(
+                    value = if (title != null) {
+                        title!!
+                    } else {
+                        ""
+                    },
+                    onValueChange = { title = it },
+                    label = { Text("Título") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                OutlinedTextField(
+                    value = if (description != null) {
+                        description!!
+                    } else {
+                        ""
+                    },
+                    onValueChange = { description = it },
+                    label = { Text("Descrição") },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
         },
         confirmButton = {
-        TextButton(
-        onClick = {
-        tooDoViewModel.Change()
-        if(title != null){
-        tooDoViewModel.addNewTooDo(title = title!!, description = description)
-        }
-        }
-        ) {
-        Text("Save")
-        }
+            TextButton(
+                onClick = {
+                    tooDoViewModel.Change()
+                    if (title != null) {
+                        tooDoViewModel.addNewTooDo(title = title!!, description = description)
+                    }
+                    
+                }
+            ) {
+                Text("Save")
+            }
         },
         dismissButton = {
-        TextButton(onClick = { tooDoViewModel.Change() }) {
-        Text("Cancel")
+            TextButton(onClick = { tooDoViewModel.Change() }) {
+                Text("Cancel")
+            }
         }
-        }
-        )
-        }
+    )
+}
 
 
 @Preview
 @Composable
-fun NewTooDoPreview(modifier: Modifier = Modifier){
-        TODOTheme {
+fun NewTooDoPreview(modifier: Modifier = Modifier) {
+    TODOTheme {
         val tooDoViewModel: TooDoViewModel = viewModel()
 
         NewTooDo(tooDoViewModel)
-        }
-        }
+    }
+}

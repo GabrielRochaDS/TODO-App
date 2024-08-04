@@ -1,10 +1,16 @@
 package com.example.todo.ui.screens
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import com.example.todo.ui.model.Todo
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.withContext
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import java.io.File
 
 
 class TooDoViewModel : ViewModel() {
@@ -44,6 +50,14 @@ class TooDoViewModel : ViewModel() {
 
     fun isOnEditin(){
         _isEditin.value = !_isEditin.value
+    }
+
+    suspend fun saveTodoListToFile(context: Context, todoList: List<Todo>, fileName: String) {
+        withContext(Dispatchers.IO) {
+            val jsonString = Json.encodeToString(todoList)
+            val file = File(context.filesDir, fileName)
+            file.writeText(jsonString)
+        }
     }
 
 }

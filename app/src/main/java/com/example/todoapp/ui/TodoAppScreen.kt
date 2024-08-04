@@ -42,93 +42,101 @@ import com.example.todo.ui.screens.TooDoViewModel
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun TodoAppScreen(modifier: Modifier = Modifier, tooDoViewModel: TooDoViewModel = viewModel()) {
-        val newCard by tooDoViewModel.newCard.collectAsState()
-        val toodos = tooDoViewModel.tooDos.collectAsState()
-        Scaffold(
+    val newCard by tooDoViewModel.newCard.collectAsState()
+    val toodos = tooDoViewModel.tooDos.collectAsState()
+    Scaffold(
         //================TopAppBar and BottonAppBar================
         topBar = {
-        TodoTopAppBar()
+            TodoTopAppBar()
         },
         bottomBar = {
-        TodoBottonAppBar(modifier, tooDoViewModel)          //   Bad Use View Model
+            TodoBottonAppBar(modifier, tooDoViewModel)          //   Bad Use View Model
         }
-        ) { innerPadding ->
+    ) { innerPadding ->
         LazyColumn(
-        contentPadding = innerPadding
+            contentPadding = innerPadding
         ) {
-        //================Exibir Cada iten da lista tooDoos================
-        items(toodos.value){
-        TooDoCard(todo = it , modifier = modifier.padding(10.dp), tooDoViewModel = tooDoViewModel)
-        }
+            //================Exibir Cada iten da lista tooDoos================
+            items(toodos.value) {
+                TooDoCard(
+                    todo = it,
+                    modifier = modifier.padding(10.dp),
+                    tooDoViewModel = tooDoViewModel
+                )
+            }
 
         }
-        }
-        if (newCard){
+    }
+    if (newCard) {
         NewTooDo(tooDoViewModel = tooDoViewModel)
-        }
-        }
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TodoTopAppBar(modifier: Modifier = Modifier) {
-        CenterAlignedTopAppBar(
+    CenterAlignedTopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
-        containerColor = MaterialTheme.colorScheme.onPrimary,
-        titleContentColor = MaterialTheme.colorScheme.primary,
+            containerColor = MaterialTheme.colorScheme.onPrimary,
+            titleContentColor = MaterialTheme.colorScheme.primary,
         ),
         title = {
-        Row(
-        verticalAlignment = Alignment.CenterVertically
-        ) {
-        Icon(
-        Icons.Filled.Check,
-        contentDescription = null,
-        modifier = Modifier.padding(end = 5.dp)
-        )
-        Text(
-        text = "Todo App",
-        fontWeight = FontWeight.Bold,
-        )
-        }
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    Icons.Filled.Check,
+                    contentDescription = null,
+                    modifier = Modifier.padding(end = 5.dp)
+                )
+                Text(
+                    text = "Todo App",
+                    fontWeight = FontWeight.Bold,
+                )
+            }
 
         },
         modifier = modifier
-        )
-        }
+    )
+}
+
 @Composable
-fun TodoBottonAppBar(modifier: Modifier = Modifier, tooDoViewModel: TooDoViewModel){         //   Bad Use View Model
-        BottomAppBar(
-        modifier = modifier.height(60.dp) ,
+fun TodoBottonAppBar(
+    modifier: Modifier = Modifier,
+    tooDoViewModel: TooDoViewModel
+) {         //   Bad Use View Model
+    BottomAppBar(
+        modifier = modifier.height(60.dp),
         actions = {
-        IconButton(onClick = { tooDoViewModel.isOnEditin() }) {
-        Icon(
-        Icons.Filled.Edit,
-        contentDescription = "Localized description",
-        )
-        }
+            IconButton(onClick = { tooDoViewModel.isOnEditin() }) {
+                Icon(
+                    Icons.Filled.Edit,
+                    contentDescription = "Localized description",
+                )
+            }
         },
         floatingActionButton = {
-        FloatingActionButton(
-        modifier = modifier
-        .height(40.dp)
-        .width(40.dp),
-        onClick = { tooDoViewModel.Change() },
-        containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
-        elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
-        ) {
-        Icon(Icons.Filled.Add, "Localized description")
+            FloatingActionButton(
+                modifier = modifier
+                        .height(40.dp)
+                        .width(40.dp),
+                onClick = { tooDoViewModel.Change() },
+                containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
+                elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
+            ) {
+                Icon(Icons.Filled.Add, "Localized description")
+            }
         }
-        }
-        )
-        }
+    )
+}
 
 
 @Preview(
-        showSystemUi = true
+    showSystemUi = true
 )
 @Composable
-fun HomeScreenPreview(){
-        TODOTheme {
+fun HomeScreenPreview() {
+    TODOTheme {
         TodoAppScreen()
-        }
-        }
+    }
+}
