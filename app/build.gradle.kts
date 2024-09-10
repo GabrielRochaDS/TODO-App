@@ -68,16 +68,17 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    implementation("androidx.compose.material:material-icons-extended")
-    implementation ("androidx.constraintlayout:constraintlayout-compose:1.0.1")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
+    implementation(libs.androidx.material.icons.extended)
+    implementation (libs.androidx.constraintlayout.compose)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.kotlinx.coroutines.android)
 
-    implementation ("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
-    implementation ("androidx.compose.ui:ui:1.0.0")
-    implementation ("androidx.compose.material:material:1.0.0")
-    implementation ("androidx.compose.ui:ui-tooling-preview:1.0.0")
-    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")
-    implementation ("androidx.activity:activity-compose:1.3.1")
+    implementation (libs.kotlinx.serialization.json)
+    implementation (libs.ui)
+    implementation (libs.androidx.material)
+    implementation (libs.ui.tooling.preview)
+    implementation (libs.androidx.lifecycle.runtime.ktx.v231)
+    implementation (libs.androidx.activity.compose.v131)
 
 
 

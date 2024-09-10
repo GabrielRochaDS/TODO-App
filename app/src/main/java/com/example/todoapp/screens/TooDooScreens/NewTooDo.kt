@@ -9,6 +9,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -18,14 +19,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.compose.TODOTheme
+import com.example.todoapp.screens.TooDooScreens.TooDoViewModel
 
 @Composable
-fun NewTooDo(tooDoViewModel: TooDoViewModel) {
-    var title by remember { mutableStateOf<String?>(null) }
-    var description by remember { mutableStateOf<String?>(null) }
+fun NewTooDo(
+    tooDotitle: String? = null,
+    tooDoDescription: String? = null,
+    onDismissRequest: () -> Unit,
+    onConfirmation: suspend (title: String?, descriprion: String?) -> Unit
+) {
+    var title by remember { mutableStateOf(tooDotitle) }
+    var description by remember { mutableStateOf(tooDoDescription) }
+    var confirmButton by remember { mutableStateOf(false) }
 
     AlertDialog(
-        onDismissRequest = { tooDoViewModel.Change() },
+        onDismissRequest = { onDismissRequest() },
         title = { Text(text = "Adicionar nova Atividade") },
         text = {
             Column {
@@ -55,22 +63,24 @@ fun NewTooDo(tooDoViewModel: TooDoViewModel) {
         confirmButton = {
             TextButton(
                 onClick = {
-                    tooDoViewModel.Change()
-                    if (title != null) {
-                        tooDoViewModel.addNewTooDo(title = title!!, description = description)
-                    }
-                    
+                    confirmButton = true
                 }
             ) {
                 Text("Save")
             }
         },
         dismissButton = {
-            TextButton(onClick = { tooDoViewModel.Change() }) {
+            TextButton(onClick = { onDismissRequest() }) {
                 Text("Cancel")
             }
         }
     )
+    LaunchedEffect(confirmButton) {
+        if (confirmButton) {
+            onConfirmation(title, description)
+            onDismissRequest()
+        }
+    }
 }
 
 
@@ -80,6 +90,6 @@ fun NewTooDoPreview(modifier: Modifier = Modifier) {
     TODOTheme {
         val tooDoViewModel: TooDoViewModel = viewModel()
 
-        NewTooDo(tooDoViewModel)
+        NewTooDo(onDismissRequest = {}, onConfirmation = { _, _ -> })
     }
 }

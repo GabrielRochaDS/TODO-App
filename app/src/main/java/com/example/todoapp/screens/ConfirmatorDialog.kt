@@ -29,7 +29,6 @@ fun ConfirmatorDialog(
     modifier: Modifier = Modifier
 ) {
 
-
     AlertDialog(
         modifier = modifier,
         icon = {
@@ -42,9 +41,7 @@ fun ConfirmatorDialog(
             secondaryText()
         },
         onDismissRequest = {
-
-                onDismissRequest()
-
+            onDismissRequest()
         },
         confirmButton = {
             TextButton(

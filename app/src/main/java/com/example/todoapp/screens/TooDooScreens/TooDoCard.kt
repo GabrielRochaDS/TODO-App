@@ -30,21 +30,28 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.auxilyarisolution.ui.ConfirmatorDialog
 import com.example.compose.TODOTheme
+import com.example.todoapp.screens.TooDooScreens.TooDoViewModel
 
 //================================ RESPONSAVEL PELO COMPOSABLE DO TOODOO================================
 
 @Composable
-fun TooDoCard(modifier: Modifier = Modifier, todo: Todo, tooDoViewModel: TooDoViewModel) {
+fun TooDoCard(modifier: Modifier = Modifier, todo: Todo, tooDoViewModel: TooDoViewModel, isEditin: Boolean) {
     //================Variaveis que guardam o maximo de linhas e se a tela ta espaandida================
     var expanded by remember { mutableStateOf(false) }
     val maxLinesTitle = if (!expanded) 1 else 10
-    val isEditin by tooDoViewModel.isEditin.collectAsState()
     var showDeleteUi by remember { mutableStateOf(false) }
+    var showTodooCard by remember { mutableStateOf(false) }
 
 
     Card(modifier = modifier
         .fillMaxWidth()
-        .clickable { expanded = !expanded }) {
+        .clickable {
+            if (!isEditin) {
+                expanded = !expanded
+            } else {
+                showTodooCard = true
+            }
+        }) {
         Column(
             modifier = modifier
                 .fillMaxWidth()
@@ -63,16 +70,13 @@ fun TooDoCard(modifier: Modifier = Modifier, todo: Todo, tooDoViewModel: TooDoVi
             )
             if (expanded) {
                 Text(
-                    text = if (todo.description != null) {
-                        todo.description
-                    } else "Has no Description",
+                    text = todo.description ?: "Texto não possui descrição",
                     style = MaterialTheme.typography.bodyLarge,
-
-                    )
+                )
             }
             if (!isEditin) {
                 IconButton(
-                    onClick = { },
+                    onClick = { expanded = !expanded },
                     modifier = modifier
                         .fillMaxWidth()
                         .height(25.dp)
@@ -107,11 +111,27 @@ fun TooDoCard(modifier: Modifier = Modifier, todo: Todo, tooDoViewModel: TooDoVi
                 onConfirmation = {
                     showDeleteUi = false
                     tooDoViewModel.deleteTooDo(todo)
-                    tooDoViewModel.isEditin
                 },
                 icon = { },
                 principalText = { Text(text = "Atenção!") },
                 secondaryText = { Text(text = "Tem certeza que deseja deletar o card? \n Essa ação não poderá ser desfeita!!") })
+        }
+        if (showTodooCard) {
+            NewTooDo(
+                tooDotitle = todo.title,
+                tooDoDescription = todo.description,
+                onDismissRequest = { showTodooCard = false },
+                onConfirmation = { title, description ->
+                    if (title != null) {
+                        tooDoViewModel.tooDos.value.forEach {
+                            if (it.title == todo.title) {
+                                it.title = title
+                                it.description = description
+                            }
+                        }
+                    }
+                }
+            )
         }
     }
 }
@@ -124,6 +144,6 @@ fun TooDoCard(modifier: Modifier = Modifier, todo: Todo, tooDoViewModel: TooDoVi
 fun HomeScreemPreview() {
     val tooDoViewModel: TooDoViewModel = viewModel()
     TODOTheme {
-        TooDoCard(todo = Todo("asdasads", "asddasdas"), tooDoViewModel = tooDoViewModel)
+        TooDoCard(todo = Todo("TooDoo Preview", "TooDoo Preview"), tooDoViewModel = tooDoViewModel, isEditin = false)
     }
 }
