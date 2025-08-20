@@ -71,7 +71,8 @@ fun TooDoCard(
                 maxLines = maxLinesTitle,
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier
-                    .align(Alignment.CenterHorizontally),
+                    .align(Alignment.CenterHorizontally)
+                    .padding(bottom = 8.dp),
                 overflow = TextOverflow.Ellipsis,
             )
             if (expanded) {
