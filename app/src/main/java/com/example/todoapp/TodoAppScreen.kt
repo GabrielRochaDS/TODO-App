@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -105,6 +106,25 @@ fun TodoAppScreen(modifier: Modifier = Modifier, tooDoViewModel: TooDoViewModel 
                 }
             })
     }
+
+    Row(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(end = 16.dp, bottom = 72.dp),
+        verticalAlignment = Alignment.Bottom,
+        horizontalArrangement = androidx.compose.foundation.layout.Arrangement.End
+    ) {
+        FloatingActionButton(
+            modifier = modifier
+                .height(48.dp)
+                .width(48.dp),
+            onClick = { newCard = true },
+            containerColor = BottomAppBarDefaults.bottomAppBarFabColor,
+            elevation = FloatingActionButtonDefaults.bottomAppBarFabElevation()
+        ) {
+            Icon(Icons.Filled.Add, "Localized description")
+        }
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -138,11 +158,18 @@ fun TodoBottonAppBar(
     modifier: Modifier = Modifier, isEditing: () -> Unit, newCard: () -> Unit
 ) {
     BottomAppBar(modifier = modifier.height(60.dp), actions = {
-        IconButton(onClick = { isEditing() }) {
-            Icon(
-                Icons.Filled.Edit,
-                contentDescription = "Localized description",
-            )
+        Row(
+            modifier = modifier
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = androidx.compose.foundation.layout.Arrangement.Center
+        ) {
+            IconButton(onClick = { isEditing() }) {
+                Icon(
+                    Icons.Filled.Edit,
+                    contentDescription = "Localized description",
+                )
+            }
         }
     }, floatingActionButton = {
         FloatingActionButton(

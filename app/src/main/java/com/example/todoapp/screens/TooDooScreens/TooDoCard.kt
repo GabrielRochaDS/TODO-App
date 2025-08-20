@@ -36,7 +36,12 @@ import com.example.todoapp.screens.TooDooScreens.TooDoViewModel
 //================================ RESPONSAVEL PELO COMPOSABLE DO TOODOO================================
 
 @Composable
-fun TooDoCard(modifier: Modifier = Modifier, todo: Todo, tooDoViewModel: TooDoViewModel, isEditin: Boolean) {
+fun TooDoCard(
+    modifier: Modifier = Modifier,
+    todo: Todo,
+    tooDoViewModel: TooDoViewModel,
+    isEditin: Boolean
+) {
     //================Variaveis que guardam o maximo de linhas e se a tela ta espaandida================
     val context = androidx.compose.ui.platform.LocalContext.current
     var expanded by remember { mutableStateOf(false) }
@@ -46,29 +51,27 @@ fun TooDoCard(modifier: Modifier = Modifier, todo: Todo, tooDoViewModel: TooDoVi
     var deleteTodo by remember { mutableStateOf(false) }
 
 
-    Card(modifier = modifier
-        .fillMaxWidth()
-        .clickable {
-            if (!isEditin) {
-                expanded = !expanded
-            } else {
-                showTodooCard = true
+    Card(
+        modifier = modifier
+            .clickable {
+                if (!isEditin) {
+                    expanded = !expanded
+                } else {
+                    showTodooCard = true
+                }
             }
-        }) {
+    ) {
         Column(
             modifier = modifier
                 .fillMaxWidth()
-                .padding(10.dp)
-        )
-        {
+        ) {
             Text(
                 text = todo.title,
                 fontSize = 20.sp,
                 maxLines = maxLinesTitle,
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(bottom = 15.dp),
+                    .align(Alignment.CenterHorizontally),
                 overflow = TextOverflow.Ellipsis,
             )
             if (expanded) {
@@ -153,6 +156,10 @@ fun TooDoCard(modifier: Modifier = Modifier, todo: Todo, tooDoViewModel: TooDoVi
 fun HomeScreemPreview() {
     val tooDoViewModel: TooDoViewModel = viewModel()
     TODOTheme {
-        TooDoCard(todo = Todo("TooDoo Preview", "TooDoo Preview"), tooDoViewModel = tooDoViewModel, isEditin = false)
+        TooDoCard(
+            todo = Todo("TooDoo Preview", "TooDoo Preview"),
+            tooDoViewModel = tooDoViewModel,
+            isEditin = false
+        )
     }
 }
