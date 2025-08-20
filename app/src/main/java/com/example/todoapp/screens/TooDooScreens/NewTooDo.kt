@@ -84,12 +84,12 @@ fun NewTooDo(
 }
 
 
-@Preview
-@Composable
-fun NewTooDoPreview(modifier: Modifier = Modifier) {
-    TODOTheme {
-        val tooDoViewModel: TooDoViewModel = viewModel()
-
-        NewTooDo(onDismissRequest = {}, onConfirmation = { _, _ -> })
-    }
-}
+//@Preview
+//@Composable
+//fun NewTooDoPreview(modifier: Modifier = Modifier) {
+//    TODOTheme {
+//        val tooDoViewModel: TooDoViewModel = viewModel()
+//
+//        NewTooDo(onDismissRequest = {}, onConfirmation = { _, _ -> })
+//    }
+//}

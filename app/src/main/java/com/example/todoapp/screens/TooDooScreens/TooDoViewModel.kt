@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import com.example.todo.ui.model.Todo
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,37 +17,33 @@ import java.io.File
 
 class TooDoViewModel : ViewModel() {
 
-    var tooDos = MutableStateFlow(mutableListOf(
-        Todo(title = "Prova de arquitetura de computadores", description = null),
-        Todo(title = "Casamento da vizinha", description = "Comprar o presente para o casamento da vizinha até o dia 10/02"),
-        Todo(title = "Strabalho da faculdade", description = "realizar pesquisas doo jetpack compose"),
-        Todo(title = "Sair com minha esposa", description = null),
-        Todo(title = "Sair com o cachorro", description = null),
-        Todo(title = "Arrumar o banheiro", description = null),
-    )
-    )
+    var tooDos = MutableStateFlow<MutableList<Todo>>(mutableListOf())
 
-    fun addNewTooDo(title: String, description: String?){
+    suspend fun addNewTooDo(title: String, description: String?, context: Context){
         val newTodo = Todo(title = title, description = description)
-        tooDos.value.add(newTodo)
+        tooDos.value = (tooDos.value + newTodo).toMutableList()
+        saveTodoListToFile(context = context, todoList = tooDos.value, fileName = "todo.json")
     }
 
-    fun deleteTooDo(todo: Todo) {
-        val currentList = tooDos.value.toMutableList()
-        currentList.remove(todo)
-        println(currentList)
-        tooDos.value = currentList
+    suspend fun deleteTooDo(todo: Todo, context: Context) {
+        tooDos.value = (tooDos.value - todo).toMutableList()
+        saveTodoListToFile(context = context, todoList = tooDos.value, fileName = "todo.json")
+    }
+
+    suspend fun load(context: Context) {
+        val loadedList = readTodoListFromFile(context, "todo.json") ?: emptyList()
+        tooDos.value = loadedList.toMutableList()
     }
 
 
-    suspend fun saveTodoListToFile(context: Context, todoList: List<Todo>, fileName: String) {
+    private suspend fun saveTodoListToFile(context: Context, todoList: List<Todo>, fileName: String) {
         withContext(Dispatchers.IO) {
             val jsonString = Json.encodeToString(todoList)
             val file = File(context.filesDir, fileName)
             file.writeText(jsonString)
         }
     }
-    suspend fun readTodoListFromFile(context: Context, fileName: String): List<Todo>? {
+    private suspend fun readTodoListFromFile(context: Context, fileName: String): List<Todo>? {
         return withContext(Dispatchers.IO) {
             val file = File(context.filesDir, fileName)
 
@@ -58,5 +55,4 @@ class TooDoViewModel : ViewModel() {
             }
         }
     }
-
 }

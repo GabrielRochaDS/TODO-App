@@ -16,6 +16,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,10 +38,12 @@ import com.example.todoapp.screens.TooDooScreens.TooDoViewModel
 @Composable
 fun TooDoCard(modifier: Modifier = Modifier, todo: Todo, tooDoViewModel: TooDoViewModel, isEditin: Boolean) {
     //================Variaveis que guardam o maximo de linhas e se a tela ta espaandida================
+    val context = androidx.compose.ui.platform.LocalContext.current
     var expanded by remember { mutableStateOf(false) }
     val maxLinesTitle = if (!expanded) 1 else 10
     var showDeleteUi by remember { mutableStateOf(false) }
     var showTodooCard by remember { mutableStateOf(false) }
+    var deleteTodo by remember { mutableStateOf(false) }
 
 
     Card(modifier = modifier
@@ -110,7 +113,7 @@ fun TooDoCard(modifier: Modifier = Modifier, todo: Todo, tooDoViewModel: TooDoVi
                 onDismissRequest = { showDeleteUi = false },
                 onConfirmation = {
                     showDeleteUi = false
-                    tooDoViewModel.deleteTooDo(todo)
+                    deleteTodo = true
                 },
                 icon = { },
                 principalText = { Text(text = "Atenção!") },
@@ -132,6 +135,12 @@ fun TooDoCard(modifier: Modifier = Modifier, todo: Todo, tooDoViewModel: TooDoVi
                     }
                 }
             )
+        }
+        if (deleteTodo) {
+            LaunchedEffect(Unit) {
+                tooDoViewModel.deleteTooDo(todo, context)
+            }
+            deleteTodo = false
         }
     }
 }

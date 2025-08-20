@@ -51,6 +51,7 @@ import com.example.todoapp.screens.TooDooScreens.TooDoViewModel
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun TodoAppScreen(modifier: Modifier = Modifier, tooDoViewModel: TooDoViewModel = viewModel()) {
+    val context = LocalContext.current
     var newCard by remember { mutableStateOf(false) }
     var isEditing by remember { mutableStateOf(false) }
     val toodos = tooDoViewModel.tooDos.collectAsState()
@@ -76,7 +77,7 @@ fun TodoAppScreen(modifier: Modifier = Modifier, tooDoViewModel: TooDoViewModel 
                 label = { Text("Pesquisar Card") },
                 modifier = modifier
                     .fillMaxWidth()
-                    .padding(20.dp)
+                    .padding(16.dp)
                     .align(Alignment.CenterHorizontally)
                     .background(MaterialTheme.colorScheme.background)
             )
@@ -85,7 +86,7 @@ fun TodoAppScreen(modifier: Modifier = Modifier, tooDoViewModel: TooDoViewModel 
                 items(toodos.value.filter { it.title.contains(searchText, ignoreCase = true) }) {
                     TooDoCard(
                         todo = it,
-                        modifier = modifier.padding(10.dp),
+                        modifier = modifier.padding(16.dp),
                         tooDoViewModel = tooDoViewModel,
                         isEditin = isEditing
                     )
@@ -100,7 +101,7 @@ fun TodoAppScreen(modifier: Modifier = Modifier, tooDoViewModel: TooDoViewModel 
             onDismissRequest = { newCard = false },
             onConfirmation = { title, description ->
                 if (title != null) {
-                    tooDoViewModel.addNewTooDo(title = title, description = description)
+                    tooDoViewModel.addNewTooDo(title = title, description = description, context = context)
                 }
             })
     }
@@ -120,7 +121,7 @@ fun TodoTopAppBar(modifier: Modifier = Modifier) {
                 Icon(
                     Icons.Filled.Check,
                     contentDescription = null,
-                    modifier = Modifier.padding(end = 5.dp)
+                    modifier = Modifier.padding(end = 8.dp)
                 )
                 Text(
                     text = "Todo App",
@@ -158,12 +159,12 @@ fun TodoBottonAppBar(
 }
 
 
-@Preview(
-    showSystemUi = true
-)
-@Composable
-fun HomeScreenPreview() {
-    TODOTheme {
-        TodoAppScreen()
-    }
-}
+//@Preview(
+//    showSystemUi = true
+//)
+//@Composable
+//fun HomeScreenPreview() {
+//    TODOTheme {
+//        TodoAppScreen()
+//    }
+//}

@@ -1,11 +1,12 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    kotlin("plugin.serialization") version "1.9.0"
 }
 
 android {
     namespace = "com.example.todo"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.todo"
@@ -79,7 +80,5 @@ dependencies {
     implementation (libs.ui.tooling.preview)
     implementation (libs.androidx.lifecycle.runtime.ktx.v231)
     implementation (libs.androidx.activity.compose.v131)
-
-
 
 }
